@@ -13,8 +13,10 @@ df = df.dropna(thresh=10)
 # Fill remaining missing values with column means (numeric only)
 df.fillna(df.mean(numeric_only=True), inplace=True)
 
+df['Gender'] = df['Gender'].apply(lambda x: 0 if x == 'M' else 1)
+
 # Standardize numeric columns
-cols_to_scale = ['AGE', 'Urea', 'Cr', 'HbA1c', 'Chol', 'TG', 'HDL', 'LDL', 'VLDL', 'BMI']
+cols_to_scale = ['Gender','AGE', 'Urea', 'Cr', 'HbA1c', 'Chol', 'TG', 'HDL', 'LDL', 'VLDL', 'BMI']
 scaler = StandardScaler()
 df[cols_to_scale] = scaler.fit_transform(df[cols_to_scale])
 
@@ -23,7 +25,7 @@ dump(scaler, 'scaler.joblib')
 
 # Encode categorical columns
 
-df['Gender'] = df['Gender'].apply(lambda x: 0 if x == 'M' else 1)
+
 df['CLASS'] = df['CLASS'].map({'N': 0, 'P': 1, 'Y': 2})
 
 df.dropna(subset=['CLASS'], inplace=True)
